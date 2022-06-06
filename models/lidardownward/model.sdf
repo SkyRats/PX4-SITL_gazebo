@@ -26,7 +26,7 @@
         </material>
       </visual>
       <sensor name="laser" type="ray">
-        <pose>0 0 0 0 0 1.57</pose>
+        <pose>0 0 0 0 1.57 0</pose>
         <ray>
           <scan>
             <horizontal>
@@ -43,17 +43,23 @@
           </range>
           <noise>
             <type>gaussian</type>
-            <mean>2</mean>
-            <stddev>2</stddev>
+            <mean>0.0</mean>
+            <stddev>0.01</stddev>
           </noise>
         </ray>
-        <plugin name="laser" filename="libRayPlugin.so" />
-        <plugin name="gazebo_ros_head_rplidar_controller" filename="libgazebo_ros_laser.so">
-          <topicName>laser/scan</topicName>
+        <update_rate>20</update_rate>
+        <plugin name="gazebo_ros_lidardownward_controller" filename="libgazebo_ros_ray_sensor.so">
+
+          <!-- Change namespace and output topic so published topic is /rrbot/laser/scan -->
+        <ros>
+          <namespace>/rrbot/laser</namespace>
+          <argument>~/out:=scan</argument>
+        </ros>
+        <!-- Set output to sensor_msgs/LaserScan to get same output type as gazebo_ros_laser -->
+        <output_type>sensor_msgs/LaserScan</output_type>
+        <!-- <frame_name> ommited, will default to hokuo_link -->
           <frameName>lidar_link</frameName>
         </plugin>
-        <always_on>1</always_on>
-        <update_rate>20</update_rate>
         <visualize>true</visualize>
       </sensor>
     </link>
